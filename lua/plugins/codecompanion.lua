@@ -1,3 +1,4 @@
+local api_key = os.getenv("AVANTE_ANTHROPIC_API_KEY")
 return {
   "olimorris/codecompanion.nvim",
   opts = {},
