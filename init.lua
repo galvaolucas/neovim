@@ -5,4 +5,4 @@ require("config.options")
 require("config.keymaps")
 require("overseer").setup()
 
-vim.cmd("colorscheme catppuccin-mocha")
+vim.cmd("colorscheme kanagawa-wave")

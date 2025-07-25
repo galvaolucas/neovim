@@ -126,7 +126,7 @@ return {
     event = "VeryLazy",
     opts = function()
       return {
-        theme = "catppuccin",
+        theme = "auto",
       }
     end,
   },
