@@ -144,5 +144,16 @@ return {
       transparent = true,
     },
   },
-  { "EdenEast/nightfox.nvim", opts = { transparent = true } },
+  {
+    "galvaolucas/maple.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("maple").setup({
+        transparent = false,
+        italic = true,
+        theme = "spring",
+      })
+    end,
+  },
 }
