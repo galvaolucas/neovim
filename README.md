@@ -8,7 +8,8 @@ Two ideas drive everything here:
 
 - **Nothing loads until it's needed.** Every spec in `lua/plugins/` declares its
   own trigger (`cmd` / `keys` / `ft` / `event`), so a cold start only pays for
-  the colorscheme and `snacks.nvim`.
+  the colorscheme, `snacks.nvim`, and lualine — which the colorscheme pulls in
+  because maple builds the statusline itself.
 - **The terminal and the editor are one surface.** The colorscheme is
   transparent on purpose so the terminal background (Ghostty, warm `#1a1614`)
   shows through instead of Neovim painting a flat rectangle over it.
@@ -47,8 +48,8 @@ lua/config/
   keymaps.lua             (intentionally thin — see below)
   autocmds.lua            disables autoformat for JS/TS buffers
 lua/plugins/
-  themes.lua              kanagawa-wave + transparent overrides; alternates lazy
-  ui.lua                  lualine, bufferline, noice, which-key, gitsigns
+  themes.lua              maple (autumn) + the cozy override layer; alternates lazy
+  ui.lua                  bufferline, noice, which-key, gitsigns (statusline is maple's)
   snacks.lua              picker, explorer, dashboard, indent, notifier
   blink.lua               completion (enter to accept, Rust fuzzy matcher)
   neocodeium.lua          AI completion, insert mode only
@@ -81,13 +82,38 @@ applies. On top of those:
 
 ## Themes
 
-`kanagawa-wave` is active, compiled to disk and transparent, with overrides for
-borderless floats, hairline splits, a warm cursor line, and snacks
-picker/dashboard highlights. After editing any kanagawa option, run
-`:KanagawaCompile` or the stale cache keeps winning.
+My own [maple.nvim](https://github.com/galvaolucas/maple.nvim) is active, on the
+`autumn` palette and transparent. Autumn rather than spring because Ghostty runs
+the `ember` palette — a warm near-black — and autumn's parchment-on-#1C1C1A with
+rust/amber/sage accents sits on top of it without a colour clash, where spring's
+teal base would fight the warm ground showing through.
 
-Tokyonight, Rosé Pine, Catppuccin and my own
-[maple.nvim](https://github.com/galvaolucas/maple.nvim) are installed lazily —
+The statusline is maple's own lualine extension too: `require("maple").load()`
+calls `lualine.setup()` itself, so LazyVim's layout is dropped in `ui.lua` rather
+than assembled and immediately replaced. This is the one thing that costs
+startup time — lualine now loads with the colorscheme instead of on `VeryLazy`.
+
+On top of the theme, `themes.lua` carries a **cozy layer** — a `ColorScheme
+maple` hook that fills in UI that postdates the theme (blink, snacks,
+bufferline, noice, which-key), maps `:terminal` to the palette, and softens a
+few groups that read loud on a dark warm ground. It also patches over a handful
+of upstream bugs worth fixing in maple itself one day:
+
+- `Normal`, `Keyword`, `@keyword`, `@keyword.function` and `@operator` are
+  re-set by maple's own `ColorScheme` handlers with no `fg`. `nvim_set_hl`
+  replaces rather than merges, so they come out colourless.
+- `DiagnosticWarn` points at `columbia_blue`, which isn't in either palette.
+- `DiffAdd`/`Change`/`Delete`/`Text` are pastel *backgrounds* (`#a4dfae` and
+  friends) with no foreground — unreadable light slabs on a dark theme.
+- `setup()` writes `"NONE"` into the shared palette table's `bg` and `border`
+  in transparent mode, so neither can be read back afterwards.
+
+The layer runs through `vim.schedule` for exactly this reason: maple registers
+its own `ColorScheme` handlers while its colors file is being sourced — i.e.
+after anything registered from the plugin spec — so a direct call would be
+overwritten. One tick later puts it last.
+
+Kanagawa, Tokyonight, Rosé Pine and Catppuccin are installed lazily —
 `:colorscheme <name>` loads them on demand at no startup cost.
 
 ## Notes on the tuning

@@ -1,18 +1,21 @@
 -- Cozy UI chrome: rounded, transparent, low-contrast.
 return {
-  -- Statusline. LazyVim's layout is kept; only the skin changes, and
-  -- `theme = "auto"` means it follows whatever colorscheme is active
-  -- instead of being pinned to one palette.
+  -- Statusline: maple's own lualine extension, not LazyVim's layout.
+  --
+  -- `require("maple").load()` calls `lualine.setup()` itself with maple's
+  -- sections (mode, filename, branch, diagnostics, diff, filetype, filesize,
+  -- position, clock) and its matching theme, so the statusline is already
+  -- built by the time the colorscheme finishes loading. Returning an empty
+  -- table here drops LazyVim's own layout instead of assembling it a moment
+  -- before maple replaces it.
+  --
+  -- `globalstatus` isn't set by maple, but lualine defaults it to
+  -- `vim.go.laststatus == 3` — which config/options.lua already sets — so the
+  -- single global statusline survives.
   {
     "nvim-lualine/lualine.nvim",
-    opts = function(_, opts)
-      opts.options = vim.tbl_extend("force", opts.options or {}, {
-        theme = "auto",
-        globalstatus = true,
-        component_separators = "",
-        section_separators = "",
-      })
-      return opts
+    opts = function()
+      return {}
     end,
   },
 
