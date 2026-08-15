@@ -22,31 +22,34 @@ require("lazy").setup({
     { import = "plugins" },
   },
   defaults = {
-    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
-    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    -- Custom plugins still default to eager, but every spec in lua/plugins/
+    -- now declares its own lazy trigger (cmd/keys/ft/event), so in practice
+    -- only the colorscheme and snacks load at startup.
     lazy = false,
-    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
-    -- have outdated releases, which may break your Neovim install.
     version = false, -- always use the latest git commit
-    -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  checker = {
-    enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
-  }, -- automatically check for plugin updates
+  -- Background update checks fire a git process per plugin. Run `:Lazy sync`
+  -- when you actually want updates instead.
+  checker = { enabled = false },
+  change_detection = { enabled = true, notify = false },
   performance = {
     rtp = {
-      -- disable some rtp plugins
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
+        "matchit",
+        "matchparen",
+        "netrwPlugin", -- snacks.explorer replaces netrw
+        "rplugin", -- no remote plugins; see providers in config/options.lua
+        "spellfile",
         "tarPlugin",
         "tohtml",
         "tutor",
         "zipPlugin",
       },
     },
+  },
+  ui = {
+    border = "rounded",
+    backdrop = 100,
   },
 })

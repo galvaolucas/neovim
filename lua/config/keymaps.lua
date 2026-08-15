@@ -1,7 +1,6 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
 --
-vim.keymap.set("n", "<leader>gg", function()
-  vim.cmd("LazyGit")
-end, { desc = "Open LazyGit" })
+-- <leader>gg (LazyGit), <leader>up (precognition) and <leader>ow/<leader>or
+-- (overseer) live on their plugin specs in lua/plugins/, so defining them
+-- here too would just shadow the lazy-loading trigger.

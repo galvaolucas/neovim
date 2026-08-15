@@ -1,8 +1,20 @@
+-- Motion hints. Off by default now — always-on virtual text in every
+-- buffer fights the calm look, and the plugin isn't loaded at all until
+-- you ask for it with <leader>up.
 return {
   "tris203/precognition.nvim",
-  --event = "VeryLazy",
+  cmd = { "Precognition" },
+  keys = {
+    {
+      "<leader>up",
+      function()
+        require("precognition").toggle()
+      end,
+      desc = "Toggle precognition hints",
+    },
+  },
   opts = {
-    startVisible = true,
+    startVisible = false,
     showBlankVirtLine = true,
     highlightColor = { link = "Comment" },
     hints = {

@@ -1,6 +1,10 @@
+-- Loads only when you actually open lazygit.
+--
+-- The telescope dependency is gone: it was pulled in purely for the
+-- `lazygit` picker extension, which cost ~8ms of startup for a picker
+-- that snacks already covers.
 return {
   "kdheepak/lazygit.nvim",
-  lazy = false,
   cmd = {
     "LazyGit",
     "LazyGitConfig",
@@ -8,15 +12,8 @@ return {
     "LazyGitFilter",
     "LazyGitFilterCurrentFile",
   },
-  -- optional for floating window border decoration
-  dependencies = {
-    "nvim-telescope/telescope.nvim",
-    "nvim-lua/plenary.nvim",
-  },
+  dependencies = { "nvim-lua/plenary.nvim" },
   keys = {
     { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
   },
-  config = function()
-    require("telescope").load_extension("lazygit")
-  end,
 }

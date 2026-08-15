@@ -3,8 +3,7 @@ require("config.lazy")
 require("config.autocmds")
 require("config.options")
 require("config.keymaps")
-require("overseer").setup()
-require("maple.lualine")
 
--- vim.cmd("colorscheme kanagawa-wave")
-vim.cmd("colorscheme maple")
+-- The colorscheme is set in lua/plugins/themes.lua via LazyVim's own
+-- `colorscheme` option. Every other scheme there is lazy, so
+-- `:colorscheme <name>` still switches instantly at zero startup cost.
